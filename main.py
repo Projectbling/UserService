@@ -11,10 +11,6 @@ init_db(app)
 
 app.include_router(guest_router)
 
-
-
-
-
 @app.get("/")
 async def read_root():     
     return JSONResponse(content={"message": "Hello, World"}, status_code=200)
