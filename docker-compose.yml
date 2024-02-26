@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  postgresdb:
+    platform: linux/amd64
+    container_name: postgres-dc
+    image: postgres:15
+    restart: always
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: Role.1453
+      POSTGRES_USER: postgres
+    volumes:  
+    - ./data:/var/lib/posgresql
+    - ./dumps:/home
+    networks:
+    - default
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+      - postgresdb
+    ports:
+      - 8080:8080
+networks:
+  default:
+    driver: bridge
+    external: false
