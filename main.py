@@ -6,6 +6,7 @@ from MODULES.User.url import guest_router
 
 
 
+
 app = FastAPI()
 init_db(app)
 
