@@ -6,11 +6,11 @@ from MODULES.User.url import guest_router
 
 
 
-
 app = FastAPI()
 init_db(app)
 
 app.include_router(guest_router)
+
 
 @app.get("/")
 async def read_root():     
