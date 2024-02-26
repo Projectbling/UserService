@@ -4,10 +4,13 @@ from Config.DatabaseConfig import init_db
 import uvicorn
 from MODULES.User.url import guest_router
 
+
+
 app = FastAPI()
 init_db(app)
 
 app.include_router(guest_router)
+
 
 
 
