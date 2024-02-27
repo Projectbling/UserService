@@ -1,21 +1,31 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import (
+    AsyncConnection,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
+from typing import Any, AsyncIterator
+
 from fastapi import FastAPI
 import os
+from sqlalchemy.orm import DeclarativeBase
+from MODULES.User.model import IBaseModel
 from Config.EnvConfiguration import GetSettings
 
 settings = GetSettings()
 
 engine = create_async_engine(settings.DATABASE_URL)
-async_session = sessionmaker(autocommit=False, autoflush=False, 
-                            bind=engine, expire_on_commit=False,class_= AsyncSession)
+sessionmaker = async_sessionmaker(autocommit=False, autoflush=False, 
+                            bind=engine)
 
 def init_db(app: FastAPI):
-    @app.add_event_handler("startup")
+    @app.on_event("startup")
     async def startup_event():
-        app.state.db = async_session()
+        app.state.db = sessionmaker()
+        async with engine.begin() as conn:
+            await conn.run_sync(IBaseModel.metadata.create_all)
 
-    @app.add_event_handler("shutdown")
+    @app.on_event("shutdown")
     async def shutdown_event():
         await app.state.db.close()
 
@@ -34,12 +44,9 @@ models_list = generate_models_list("MODULES")
 class DB_Context:
 
     @staticmethod
-    async def get_db():
-        session = async_session()
-        try:
-            yield session
-        finally:
-            await session.close()
+    async def get_db() -> AsyncSession:
+        session = sessionmaker()
+        return session
 # from tortoise import Tortoise
 # from tortoise.contrib.fastapi import register_tortoise
 # from fastapi import FastAPI
