@@ -1,14 +1,16 @@
 
-from Utility.GenerateUniqueCode import GenerateUniqueCode
+
 
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, Sequence
 from sqlalchemy.sql import func
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.functions import random
-import string
+from Utility.GenerateUniqueCode import GenerateUniqueCode
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
+
 
 class IBaseModel(Base):
     __abstract__ = True
@@ -18,6 +20,7 @@ class IBaseModel(Base):
     isDeleted = Column(Boolean, default=False)
 
 class User(IBaseModel):
+    
     __tablename__ = 'user'
 
     email = Column(String(128), unique=True)
@@ -25,9 +28,12 @@ class User(IBaseModel):
     referanceCode = Column(String(128), unique=True)
 
     def __init__(self, email, refUserID=0):
+        
         self.email = email
         self.refUserID = refUserID
-        self.referanceCode = GenerateUniqueCode(8)
+        self.referanceCode = GenerateUniqueCode.generateRandomCode(8)
+
+
 
   
 
