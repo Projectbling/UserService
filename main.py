@@ -3,8 +3,7 @@ from fastapi.responses import JSONResponse
 from Config.DatabaseConfig import init_db
 import uvicorn
 from MODULES.User.url import guest_router
-
-
+from MODULES.User.userService import *
 
 app = FastAPI()
 init_db(app)
