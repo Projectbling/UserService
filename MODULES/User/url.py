@@ -2,10 +2,9 @@ from fastapi import APIRouter,Depends,Request
 from tortoise.contrib.fastapi import HTTPNotFoundError
 from .responce import UserCreateResponse
 from tortoise.transactions import in_transaction
-from .schema import UserRegisterSchema
 from .model import User 
-
-
+from .schema import UserCreateSchema
+from core.mediator import Mediator
 guest_router = APIRouter(
     prefix="/user",
     tags=["user"],
@@ -13,19 +12,12 @@ guest_router = APIRouter(
 )
 
 
-async def register_user(data: UserRegisterSchema) -> UserCreateResponse:
-        print(data.email)
-        async with in_transaction():
-            user = await User.create(
-                email=data.email,
-                  
-            )
-            return await user
+
 
 
 @guest_router.post("/register")
-async def create_user(data: UserRegisterSchema):
-    return await register_user(UserRegisterSchema(email=data.email))
+async def create_user(data: UserCreateSchema):
+    return await Mediator.handle("main",data)
 
 # @router.get("/{user_id}", response_model=UserOut)
 # async def read_user(user_id: int):

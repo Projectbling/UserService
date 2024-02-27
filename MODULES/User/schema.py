@@ -1,7 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel, EmailStr
 
-class UserRegisterSchema(BaseModel):
+class UserCreateSchema(BaseModel):
     email: EmailStr
     
 
