@@ -14,7 +14,7 @@ class Base(DeclarativeBase):
 
 class IBaseModel(Base):
     __abstract__ = True
-    id = Column(Integer, Sequence('id_seq'), primary_key=True)
+    id = Column(Integer, autoincrement=True, primary_key=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     isDeleted = Column(Boolean, default=False)
