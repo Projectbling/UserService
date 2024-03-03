@@ -4,6 +4,8 @@ from Config.DatabaseConfig import init_db
 import uvicorn
 from MODULES.User.url import guest_router
 from MODULES.User.userService import *
+from Config.EnvConfiguration import GetSettings, GetFastApiSettings
+
 
 app = FastAPI()
 init_db(app)
@@ -15,4 +17,4 @@ async def read_root():
     return JSONResponse(content={"message": "Hello, World"}, status_code=200)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    uvicorn.run(app, host="0.0.0.0", port=GetFastApiSettings().Fastapi_Port)
